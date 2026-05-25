@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER OPS COMMAND CENTER | NEXUS-7</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<!-- ==================== LOGIN SCREEN ==================== -->
+<div id="login-screen" class="login-screen">
+    <canvas id="login-matrix"></canvas>
+    <div class="login-overlay"></div>
+    <div class="login-container">
+        <div class="login-logo">
+            <div class="hex-shield">
+                <svg viewBox="0 0 100 100" class="shield-svg">
+                    <polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5" fill="none" stroke="#00ff41" stroke-width="2"/>
+                    <polygon points="50,15 85,32.5 85,67.5 50,85 15,67.5 15,32.5" fill="none" stroke="#00ff41" stroke-width="1" opacity="0.5"/>
+                    <text x="50" y="55" text-anchor="middle" fill="#00ff41" font-family="Orbitron" font-size="14" font-weight="700">N7</text>
+                </svg>
+            </div>
+            <h1 class="login-title">NEXUS-7</h1>
+            <p class="login-subtitle">CYBER OPERATIONS COMMAND CENTER</p>
+            <div class="login-version">v4.2.1 | CLASSIFIED</div>
+        </div>
+        <form id="login-form" class="login-form">
+            <div class="input-group">
+                <label>OPERATIVE ID</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">⟟</span>
+                    <input type="text" id="username" placeholder="Enter operative callsign" autocomplete="off" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>ACCESS KEY</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">⬡</span>
+                    <input type="password" id="password" placeholder="Enter authorization key" required>
+                    <button type="button" class="toggle-vis" onclick="togglePassword()">◉</button>
+                </div>
+            </div>
+            <div class="security-notice">
+                <span class="notice-icon">⚠</span>
+                <span>UNAUTHORIZED ACCESS WILL BE TRACED AND PROSECUTED</span>
+            </div>
+            <button type="submit" class="login-btn">
+                <span class="btn-text">INITIALIZE SESSION</span>
+                <span class="btn-loader" style="display:none;">
+                    <span class="loader-dot"></span>
+                    <span class="loader-dot"></span>
+                    <span class="loader-dot"></span>
+                </span>
+            </button>
+            <div class="login-footer">
+                <span>ENCRYPTED CHANNEL | AES-256 | BIOMETRIC READY</span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ==================== MAIN COMMAND CENTER ==================== -->
+<div id="command-center" class="command-center" style="display:none;">
+    <!-- Matrix Background Canvas -->
+    <canvas id="main-matrix"></canvas>
+
+    <!-- Top Navigation Bar -->
+    <header class="top-bar">
+        <div class="top-bar-left">
+            <div class="nexus-badge">
+                <svg viewBox="0 0 100 100" class="shield-svg-sm">
+                    <polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5" fill="none" stroke="currentColor" stroke-width="3"/>
+                    <text x="50" y="58" text-anchor="middle" fill="currentColor" font-family="Orbitron" font-size="22" font-weight="700">N7</text>
+                </svg>
+            </div>
+            <span class="top-title">NEXUS-7</span>
+            <span class="top-separator">|</span>
+            <span class="top-subtitle">CYBER OPS COMMAND</span>
+        </div>
+        <div class="top-bar-center">
+            <div class="system-clocks">
+                <div class="clock-item">
+                    <span class="clock-label">LOCAL</span>
+                    <span id="clock-local" class="clock-value">--:--:--</span>
+                </div>
+                <div class="clock-item">
+                    <span class="clock-label">UTC</span>
+                    <span id="clock-utc" class="clock-value">--:--:--</span>
+                </div>
+                <div class="clock-item">
+                    <span class="clock-label">ZULU</span>
+                    <span id="clock-zulu" class="clock-value">--:--:--</span>
+                </div>
+            </div>
+        </div>
+        <div class="top-bar-right">
+            <div class="threat-indicator" id="threat-indicator">
+                <span class="threat-label">THREAT LEVEL</span>
+                <div class="threat-bar">
+                    <div class="threat-fill" id="threat-fill"></div>
+                </div>
+                <span class="threat-status" id="threat-status">ELEVATED</span>
+            </div>
+            <div class="user-info">
+                <span class="user-icon">⬡</span>
+                <span id="active-user" class="user-name">OPERATIVE</span>
+            </div>
+            <button class="logout-btn" onclick="logout()">⏻</button>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <div class="main-grid">
+        <!-- LEFT SIDEBAR: Active Breaches & Alerts -->
+        <aside class="sidebar sidebar-left">
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-icon">⚠</span>
+                    <span class="panel-title">ACTIVE BREACHES</span>
+                    <span class="panel-count" id="breach-count">0</span>
+                </div>
+                <div class="panel-content" id="breaches-panel">
+                    <!-- Breach items injected here -->
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-icon">◈</span>
+                    <span class="panel-title">NETWORK NODES</span>
+                    <span class="live-dot"></span>
+                </div>
+                <div class="panel-content" id="nodes-panel">
+                    <!-- Node items injected here -->
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-icon">◉</span>
+                    <span class="panel-title">FIREWALL STATUS</span>
+                </div>
+                <div class="panel-content" id="firewall-panel">
+                    <div class="firewall-grid">
+                        <div class="fw-item"><span class="fw-label">PERIMETER</span><div class="fw-bar"><div class="fw-fill" style="width:95%"></div></div><span class="fw-pct">95%</span></div>
+                        <div class="fw-item"><span class="fw-label">INTERNAL</span><div class="fw-bar"><div class="fw-fill" style="width:88%"></div></div><span class="fw-pct">88%</span></div>
+                        <div class="fw-item"><span class="fw-label">DMZ</span><div class="fw-bar"><div class="fw-fill" style="width:72%"></div></div><span class="fw-pct">72%</span></div>
+                        <div class="fw-item"><span class="fw-label">CLOUD</span><div class="fw-bar"><div class="fw-fill" style="width:91%"></div></div><span class="fw-pct">91%</span></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CENTER: Main Dashboard -->
+        <main class="center-content">
+            <!-- World Threat Map -->
+            <div class="panel panel-map">
+                <div class="panel-header">
+                    <span class="panel-icon">◉</span>
+                    <span class="panel-title">GLOBAL THREAT MAP</span>
+                    <span class="live-dot"></span>
+                    <span class="panel-badge">LIVE</span>
+                </div>
+                <div class="panel-content map-content">
+                    <canvas id="world-map"></canvas>
+                    <div class="map-stats">
+                        <div class="map-stat">
+                            <span class="stat-value" id="total-attacks">0</span>
+                            <span class="stat-label">ATTACKS/MIN</span>
+                        </div>
+                        <div class="map-stat">
+                            <span class="stat-value" id="active-threads">0</span>
+                            <span class="stat-label">ACTIVE THREATS</span>
+                        </div>
+                        <div class="map-stat">
+                            <span class="stat-value" id="blocked-today">0</span>
+                            <span class="stat-label">BLOCKED TODAY</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Security Stream & AI Oracle Row -->
+            <div class="center-bottom-row">
+                <!-- Live Security Stream -->
+                <div class="panel panel-stream">
+                    <div class="panel-header">
+                        <span class="panel-icon">📡</span>
+                        <span class="panel-title">LIVE SECURITY FEED</span>
+                        <span class="live-dot"></span>
+                        <span class="panel-badge">STREAMING</span>
+                    </div>
+                    <div class="panel-content stream-content" id="security-stream">
+                        <!-- Stream items injected here -->
+                    </div>
+                </div>
+
+                <!-- AI Oracle -->
+                <div class="panel panel-oracle">
+                    <div class="panel-header">
+                        <span class="panel-icon">⬡</span>
+                        <span class="panel-title">AI ORACLE</span>
+                        <span class="oracle-status">ONLINE</span>
+                    </div>
+                    <div class="panel-content oracle-content">
+                        <div class="oracle-messages" id="oracle-messages">
+                            <div class="oracle-msg system">
+                                <span class="msg-sender">ORACLE</span>
+                                <span class="msg-text">Nexus-7 AI Oracle initialized. I can analyze threats, run diagnostics, provide intelligence briefings, and assist with cyber operations. How may I serve, Operative?</span>
+                                <span class="msg-time" id="oracle-init-time"></span>
+                            </div>
+                        </div>
+                        <div class="oracle-input-area">
+                            <input type="text" id="oracle-input" placeholder="Ask the Oracle..." autocomplete="off">
+                            <button id="oracle-send" onclick="sendToOracle()">⬡</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- RIGHT SIDEBAR: Metrics & Terminal -->
+        <aside class="sidebar sidebar-right">
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-icon">◈</span>
+                    <span class="panel-title">SYSTEM METRICS</span>
+                </div>
+                <div class="panel-content metrics-content">
+                    <div class="metric-item">
+                        <div class="metric-header">
+                            <span class="metric-label">CPU LOAD</span>
+                            <span class="metric-value" id="cpu-val">47%</span>
+                        </div>
+                        <div class="metric-bar"><div class="metric-fill" id="cpu-fill" style="width:47%"></div></div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-header">
+                            <span class="metric-label">MEMORY</span>
+                            <span class="metric-value" id="mem-val">62%</span>
+                        </div>
+                        <div class="metric-bar"><div class="metric-fill" id="mem-fill" style="width:62%"></div></div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-header">
+                            <span class="metric-label">NETWORK I/O</span>
+                            <span class="metric-value" id="net-val">34%</span>
+                        </div>
+                        <div class="metric-bar"><div class="metric-fill" id="net-fill" style="width:34%"></div></div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-header">
+                            <span class="metric-label">DISK I/O</span>
+                            <span class="metric-value" id="disk-val">21%</span>
+                        </div>
+                        <div class="metric-bar"><div class="metric-fill" id="disk-fill" style="width:21%"></div></div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-header">
+                            <span class="metric-label">THREAT ENGINE</span>
+                            <span class="metric-value" id="engine-val">89%</span>
+                        </div>
+                        <div class="metric-bar"><div class="metric-fill accent" id="engine-fill" style="width:89%"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-icon">◉</span>
+                    <span class="panel-title">RECENT ACTIVITY</span>
+                </div>
+                <div class="panel-content activity-content" id="activity-feed">
+                    <!-- Activity items injected here -->
+                </div>
+            </div>
+
+            <!-- Command Terminal -->
+            <div class="panel panel-terminal">
+                <div class="panel-header">
+                    <span class="panel-icon">⟩</span>
+                    <span class="panel-title">COMMAND TERMINAL</span>
+                </div>
+                <div class="panel-content terminal-content">
+                    <div class="terminal-output" id="terminal-output">
+                        <div class="term-line system">NEXUS-7 Terminal v4.2.1</div>
+                        <div class="term-line system">Type 'help' for available commands</div>
+                        <div class="term-line system">─────────────────────────────</div>
+                    </div>
+                    <div class="terminal-input-line">
+                        <span class="term-prompt">nexus@ops:~$</span>
+                        <input type="text" id="terminal-input" placeholder="Enter command..." autocomplete="off">
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Bottom Ticker -->
+    <footer class="bottom-ticker">
+        <div class="ticker-label">⬡ INTEL FEED</div>
+        <div class="ticker-wrap">
+            <div class="ticker-content" id="ticker-content">
+                <!-- Ticker items injected here -->
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
